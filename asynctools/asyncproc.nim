@@ -851,6 +851,7 @@ else:
           p.isExit = true
           p.exitCode = statusToExitCode(status)
           retFuture.complete(p.exitCode)
+        fd.unregister()
 
       if p.isExit:
         retFuture.complete(p.exitCode)
