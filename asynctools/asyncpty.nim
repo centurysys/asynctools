@@ -255,8 +255,6 @@ else:
         raiseOSError(osLastError())
 
   else:
-    import posix
-
     proc posix_openpt(flags: cint): cint
          {.importc: "posix_openpt", header: """#include <stdlib.h>
                                                #include <fcntl.h>""".}
@@ -368,7 +366,7 @@ when isMainModule:
     if writeFile(ptyHandle, addr data[0], len(data).int32, nil, nil) == 0:
       raiseOSError(osLastError())
   else:
-    var fd = posix.open(pty.name, posix.O_RDWR)
+    var fd = posix.open(pty.name.cstring, posix.O_RDWR)
     if fd == -1:
       raiseOSError(osLastError())
 

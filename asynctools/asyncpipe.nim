@@ -492,7 +492,7 @@ when isMainModule:
     try:
       sc = waitFor write(o, cast[pointer](addr outBuffer[0]),
                          outBuffer.len)
-    except:
+    except CatchableError:
       discard
     doAssert(sc == -1)
 

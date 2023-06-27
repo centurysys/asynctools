@@ -24,9 +24,6 @@ else:
   const STILL_ACTIVE = 259
   import posix
 
-when defined(linux):
-  import linux
-
 type
   ProcessOption* = enum  ## options that can be passed `startProcess`
     poEchoCmd,            ## echo the command before execution
@@ -510,7 +507,7 @@ else:
     result = cast[cstringArray](alloc0((counter + 1) * sizeof(cstring)))
     var i = 0
     for key, val in envPairs():
-      var x = key.string & "=" & val.string
+      var x = key & "=" & val
       result[i] = cast[cstring](alloc(x.len+1))
       copyMem(result[i], addr(x[0]), x.len+1)
       inc(i)
@@ -600,7 +597,7 @@ else:
         envToCStringArray(env)
     defer: deallocCStringArray(sysEnv)
 
-    sd.sysCommand = sysCommand
+    sd.sysCommand = sysCommand.cstring
     sd.sysArgs = sysArgs
     sd.sysEnv = sysEnv
     sd.options = options
@@ -871,7 +868,7 @@ else:
             try:
               addProcess(p.procId, cb)
               break
-            except:
+            except CatchableError:
               let err = osLastError()
               if cint(err) == ESRCH:
                 continue
@@ -902,8 +899,6 @@ proc execProcess(command: string, args: seq[string] = @[],
   close(p)
 
 when isMainModule:
-  import os
-
   when defined(windows):
     var data = waitFor(execProcess("cd"))
   else:

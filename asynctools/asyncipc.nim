@@ -487,9 +487,9 @@ else:
     let pipeName = pipeHeaderName & name
 
     if side == sideReader:
-      pipeFd = open(pipeName, O_NONBLOCK or O_RDWR)
+      pipeFd = open(pipeName.cstring, O_NONBLOCK or O_RDWR)
     else:
-      pipeFd = open(pipeName, O_NONBLOCK or O_WRONLY)
+      pipeFd = open(pipeName.cstring, O_NONBLOCK or O_WRONLY)
 
     if pipeFd < 0:
       raiseOSError(osLastError())
